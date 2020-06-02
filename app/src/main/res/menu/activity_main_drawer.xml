@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/group1">
+        <item
+            android:id="@+id/nav_item_one"
+            android:icon="@drawable/ic_wb_sunny_black_24dp"
+            android:title="@string/my_day" />
+        <item
+            android:id="@+id/nav_item_two"
+            android:icon="@drawable/ic_star_border_black_24dp"
+            android:title="@string/important" />
+        <item
+            android:id="@+id/nav_item_three"
+            android:icon="@drawable/ic_event_complete_black_24dp"
+            android:title="@string/completed" />
+    </group>
+
+    <group android:id="@+id/group2">
+        <item
+            android:id="@+id/not_to_dolist"
+            android:icon="@drawable/ic_warning_black_24dp"
+            android:title="@string/not_todo_list" />
+    </group>
+    <group android:id="@+id/group3">
+        <item
+            android:id="@+id/home"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="Task" />
+    </group>
+    <group android:id="@+id/group5"/>
+</menu>
