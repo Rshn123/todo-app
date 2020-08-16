@@ -18,6 +18,10 @@ class DataRepository(private val dataDao: DataDao) {
         return dataDao.getTableRow(id)
     }
 
+    fun updateReminder(id:String, reminder:Boolean){
+        dataDao.updateReminder(id, reminder)
+    }
+
     fun updateImportant(id: String, boolean: Boolean) {
         dataDao.updateIsImportant(id, boolean)
     }

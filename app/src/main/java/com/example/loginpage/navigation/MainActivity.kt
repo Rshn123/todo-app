@@ -8,7 +8,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.loginpage.DataViewModel
-import com.example.loginpage.Main2Activity
+import com.example.loginpage.fragment.Main2Activity
 import com.example.loginpage.R
 import com.example.loginpage.fragment.important.ImportantFragment
 import com.example.loginpage.fragment.myday.AddToDayFragmnt
@@ -53,5 +53,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         dataViewModel = DataViewModel(this)
         val trueOrFalse = !dataViewModel.getTableRow(id).isImportant
         dataViewModel.updateImportant(id, trueOrFalse)
+    }
+    
+    override fun onBackPressed() {
+        val fm: FragmentManager = supportFragmentManager
+        if(fm.backStackEntryCount>0){
+            fm.popBackStack()
+        }
+        else{
+            super.onBackPressed()
+        }
+
     }
 }

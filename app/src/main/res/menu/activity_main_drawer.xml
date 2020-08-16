@@ -27,5 +27,10 @@
             android:icon="@drawable/ic_home_black_24dp"
             android:title="Task" />
     </group>
-    <group android:id="@+id/group5"/>
+    <group android:id="@+id/group5">
+        <item
+            android:id="@+id/setting"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="Setting" />
+    </group>
 </menu>

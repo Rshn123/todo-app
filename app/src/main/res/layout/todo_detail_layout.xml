@@ -41,7 +41,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/delete_data_imageview"
+                android:id="@+id/important_imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ic_star_border_black_24dp"

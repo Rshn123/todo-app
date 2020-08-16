@@ -24,6 +24,9 @@ interface DataDao {
     @Query("UPDATE todo_list SET myDay = :myDay WHERE id = :id")
     fun updateMYDay(id: String, myDay: Boolean)
 
+    @Query("UPDATE todo_list SET reminder = :reminder WHERE id = :id")
+    fun updateReminder(id: String, reminder: Boolean)
+
     @Query("SELECT * FROM todo_list WHERE isImportant = 1")
     fun getAllImportant(): LiveData<List<Data>>
 

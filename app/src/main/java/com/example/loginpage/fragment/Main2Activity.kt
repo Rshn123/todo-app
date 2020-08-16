@@ -1,4 +1,4 @@
-package com.example.loginpage
+package com.example.loginpage.fragment
 
 import android.graphics.Canvas
 import android.os.Bundle
@@ -11,6 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.loginpage.DataViewModel
+import com.example.loginpage.R
+import com.example.loginpage.ToDoAdapter
 import com.example.loginpage.room.Data
 import kotlinx.android.synthetic.main.activity_main2.*
 
@@ -31,13 +34,13 @@ class Main2Activity : Fragment() {
         //for navigation drawer
         adapter = ToDoAdapter(context!!)
         todoCountTextView = view!!.findViewById(R.id.textview_header)
-        importantMarkImageView = view!!.findViewById(R.id.delete_data_imageview)
+        importantMarkImageView = view!!.findViewById(R.id.important_imageView)
 
         dataViewModel = DataViewModel(context!!)
 
         dataViewModel = ViewModelProvider(
                 activity!!,
-                DataViewModel.Factory(context!!)
+            DataViewModel.Factory(context!!)
         ).get(DataViewModel::class.java)
 
         todo_recycle_view.layoutManager = LinearLayoutManager(context)

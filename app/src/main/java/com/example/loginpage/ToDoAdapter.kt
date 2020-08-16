@@ -3,14 +3,12 @@ package com.example.loginpage
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.loginpage.fragment.Main3Activity
 import com.example.loginpage.navigation.MainActivity
 import com.example.loginpage.room.Data
 import kotlinx.android.synthetic.main.todo_detail_layout.view.*
@@ -42,6 +40,7 @@ class ToDoAdapter(val context: Context) : RecyclerView.Adapter<ToDoAdapter.ViewH
         holder.itemView.textView_title.setOnClickListener {
             val intent = Intent(context, Main3Activity::class.java)
             intent.putExtra("id", todoList[position].id)
+            intent.putExtra("number", todoList[position].number)
             context.startActivity(intent)
         }
     }
@@ -49,16 +48,14 @@ class ToDoAdapter(val context: Context) : RecyclerView.Adapter<ToDoAdapter.ViewH
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         // Holds the TextView that will add each animal to
         val title = view.textView_title
-        val important = view.findViewById(R.id.delete_data_imageview) as ImageView
+        val important = view.findViewById(R.id.important_imageView) as ImageView
 
         fun bind(context: Context, data: Data) {
             when {
                 data.isImportant -> {
-                    Log.d("011", "asdfsdf")
                     important.background = ContextCompat.getDrawable(context, R.drawable.ic_star_black_24dp)
                 }
                 !data.isImportant -> {
-                    Log.d("011", "f")
                     important.background = ContextCompat.getDrawable(context, R.drawable.ic_star_border_black_24dp)
 
                 }

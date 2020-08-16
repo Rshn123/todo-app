@@ -1,54 +1,57 @@
-package com.example.loginpage.fragment
+package com.example.loginpage
 
-import android.app.AlarmManager
 import android.app.Dialog
-import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.DatePicker
 import android.widget.TimePicker
-import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import com.example.loginpage.AlarmReceiver
-import com.example.loginpage.DataViewModel
-import com.example.loginpage.R
+import com.example.loginpage.fragment.AlarmReceiver
+import com.example.loginpage.fragment.NotificationSchedular
 import kotlinx.android.synthetic.main.activity_main3.*
 import kotlinx.android.synthetic.main.backup.*
 import kotlinx.android.synthetic.main.calander_and_time_popup.*
-import java.util.*
 
 
 class Main3Activity : AppCompatActivity() {
 
     var id = String()
+    var number: Int = 0
     lateinit var dataViewModel: DataViewModel
     lateinit var dialog: Dialog
     lateinit var datePicker: DatePicker
     lateinit var timePicker: TimePicker
-    val RQS_1 = 1
+    lateinit var sharedPreferences: SharedPreferences
+    lateinit var b: Bundle
 
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main3)
 
+        sharedPreferences = getSharedPreferences("todoConfiguration", 0)
+
         dialog = Dialog(this)
         dataViewModel = ViewModelProvider(
-                this, DataViewModel.Factory(applicationContext)
+            this, DataViewModel.Factory(applicationContext)
         ).get(DataViewModel::class.java)
 
         val getIntent: Intent = intent
-        val b: Bundle = getIntent.extras!!
+        b = getIntent.extras!!
 
         if (b != null) {
             id = b.get("id").toString()
-            Log.d("0110", "skladjlkfsf" + id)
+            number = b.getInt("number")
+            Log.d("566",""+number)
             val tableRow = dataViewModel.getTableRow(id)
             textView_title.text = tableRow.title
         }
@@ -77,6 +80,8 @@ class Main3Activity : AppCompatActivity() {
         due_date.setOnClickListener {
             showDueDatePopUp()
         }
+
+        showDateAndTime()
     }
 
     override fun onResume() {
@@ -84,13 +89,16 @@ class Main3Activity : AppCompatActivity() {
         val queryResult = dataViewModel.getTableRow(id)
         val trueOrFalse = queryResult.myDay
         val isImportant = queryResult.isImportant
+        val reminder = queryResult.reminder
         selectedMyDay(trueOrFalse)
         selectedImportant(isImportant)
+        selectReminder(reminder)
     }
 
     private fun selectedMyDay(boolean: Boolean) {
         if (boolean) {
-            my_day.background = ContextCompat.getDrawable(this, R.drawable.recycle_view_item_another)
+            my_day.background =
+                ContextCompat.getDrawable(this, R.drawable.recycle_view_item_another)
         } else {
             my_day.background = ContextCompat.getDrawable(this, R.drawable.recycle_view_item)
         }
@@ -98,9 +106,11 @@ class Main3Activity : AppCompatActivity() {
 
     private fun selectedImportant(boolean: Boolean) {
         if (boolean) {
-            is_important_imageView.background = ContextCompat.getDrawable(this, R.drawable.ic_star_black_24dp)
+            is_important_imageView.background =
+                ContextCompat.getDrawable(this, R.drawable.ic_star_black_24dp)
         } else {
-            is_important_imageView.background = ContextCompat.getDrawable(this, R.drawable.ic_star_border_black_24dp)
+            is_important_imageView.background =
+                ContextCompat.getDrawable(this, R.drawable.ic_star_border_black_24dp)
         }
     }
 
@@ -117,11 +127,28 @@ class Main3Activity : AppCompatActivity() {
         dialog.show()
     }
 
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun showReminderPopUP() {
         dialog.setContentView(R.layout.calander_and_time_popup)
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.calender.setBackgroundColor(Color.GRAY)
         dialog.cancel.setOnClickListener {
+            NotificationSchedular.cancelReminder(
+                applicationContext,
+                AlarmReceiver::class.java,
+                number
+            )
+            val editor = sharedPreferences.edit()
+            editor.putString(textView_title.text.toString() + "date", "")
+            editor.putString(textView_title.text.toString() + "time", "")
+            editor.apply()
+            val trueOrFalse = false
+            selectReminder(trueOrFalse)
+            dataViewModel.updateReminder(id, trueOrFalse)
+            showDateAndTime()
+            dialog.dismiss()
+        }
+        dialog.close_popup_calendar.setOnClickListener {
             dialog.dismiss()
         }
         dialog.calender.setOnClickListener {
@@ -141,34 +168,49 @@ class Main3Activity : AppCompatActivity() {
         datePicker = dialog.findViewById(R.id.calender_view)
         timePicker = dialog.findViewById(R.id.time_picker)
 
-
         dialog.save.setOnClickListener {
-            val current = Calendar.getInstance()
-            val cal = Calendar.getInstance()
-            cal.set(datePicker.year, datePicker.month, datePicker.dayOfMonth, timePicker.currentHour, timePicker.currentMinute, 0)
-//            val cal = Calendar.getInstance().apply {
-//                timeInMillis = System.currentTimeMillis()
-//                set(Calendar.HOUR_OF_DAY, 8)
-//                set(Calendar.MINUTE, 30)
-//            }
+            NotificationSchedular.setReminder(
+                applicationContext,
+                AlarmReceiver::class.java,
+                datePicker.year,
+                datePicker.month,
+                datePicker.dayOfMonth,
+                timePicker.currentHour,
+                timePicker.currentMinute,
+                textView_title.text.toString(),
+                number
+            )
+            val editor = sharedPreferences.edit()
+            editor.putString(
+                textView_title.text.toString() + "date",
+                datePicker.year.toString() + "/" + datePicker.month.toString() + "/" + datePicker.dayOfMonth.toString()
+            )
+            editor.putString(
+                textView_title.text.toString() + "time",
+                timePicker.currentHour.toString() + ":" + timePicker.currentMinute.toString()
+            )
+            editor.apply()
+            val trueOrFalse = true
+            selectReminder(trueOrFalse)
+            dataViewModel.updateReminder(id, trueOrFalse)
+            showDateAndTime()
+            dialog.dismiss()
+        }
+    }
 
-            if (cal < current) {
-                Toast.makeText(this, "Invalid Date/Time", Toast.LENGTH_SHORT).show()
-            } else {
-                var alarmMgr: AlarmManager? = null
-                lateinit var alarmIntent: PendingIntent
-                alarmMgr = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                alarmIntent = Intent(this, AlarmReceiver::class.java).let { intent ->
-                    PendingIntent.getBroadcast(this, 0, intent, 0)
-                }
+    private fun showDateAndTime() {
+        date_textView.text =
+            sharedPreferences.getString(textView_title.text.toString() + "date", "")
+        time_textView.text =
+            sharedPreferences.getString(textView_title.text.toString() + "time", "")
+    }
 
-                alarmMgr?.setRepeating(
-                        AlarmManager.RTC_WAKEUP,
-                        cal.timeInMillis,
-                        1000 * 60 * 20,
-                        alarmIntent
-                )
-            }
+    private fun selectReminder(boolean: Boolean) {
+        if (boolean) {
+            reminder.background =
+                ContextCompat.getDrawable(this, R.drawable.recycle_view_item_another)
+        } else {
+            reminder.background = ContextCompat.getDrawable(this, R.drawable.recycle_view_item)
         }
     }
 
@@ -181,7 +223,4 @@ class Main3Activity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun setAlarm(targetCal: Calendar) {
-
-    }
 }

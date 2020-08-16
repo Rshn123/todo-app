@@ -32,6 +32,10 @@ class DataViewModel(context: Context) : ViewModel() {
         repository.delete(id)
     }
 
+    internal fun updateReminder(id:String, reminder: Boolean){
+        repository.updateReminder(id,reminder)
+    }
+
     internal fun updateImportant(id: String, isImportant: Boolean) {
         repository.updateImportant(id, isImportant)
     }

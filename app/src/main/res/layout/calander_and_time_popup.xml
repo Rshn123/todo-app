@@ -18,7 +18,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            app:layout_constraintStart_toStartOf="parent">
 
+            <LinearLayout
+                android:id="@+id/close_popup_calendar"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:gravity="center_vertical|right">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_remove_circle_outline_black_24dp" />
+            </LinearLayout>
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,7 +45,6 @@
                 android:id="@+id/calender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
                 android:layout_weight="1">
 
                 <LinearLayout
@@ -61,7 +77,6 @@
                 android:id="@+id/time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15sp"
                 android:layout_weight="1">
 
                 <LinearLayout
@@ -118,7 +133,7 @@
                 android:layout_height="30dp"
                 android:layout_marginRight="20dp"
                 android:gravity="center"
-                android:text="Cancel"
+                android:text="Abort"
                 android:textSize="14dp"
                 android:textStyle="bold" />
 
@@ -129,7 +144,7 @@
                 android:layout_marginLeft="3dp"
                 android:layout_marginRight="10dp"
                 android:gravity="center"
-                android:text="Save"
+                android:text="Set"
                 android:textSize="14dp"
                 android:textStyle="bold" />
         </LinearLayout>
